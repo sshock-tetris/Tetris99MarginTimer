@@ -1,6 +1,6 @@
 # Tetris99MarginTimer
 
-TETRIS 99用の試合時間を知らせるタイマーです。OBS (Open Broadcast Software) 上で使用することが前提となります。
+TETRIS 99用の試合時間を知らせるタイマーです。OBS (Open Broadcaster Software) 上で使用することが前提となります。
 
 ## 機能
 
