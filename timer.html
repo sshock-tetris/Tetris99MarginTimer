@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Margin Timer</title>
+<style>
+*{
+	margin: 0 2px;
+	padding: 0;
+}
+.timer{
+	font-size: 46px;
+	font-weight: 600;
+	line-height: 1;
+	font-family: Meiryo, メイリオ, sans-serif;
+	letter-spacing: 5px;
+}
+.normal{
+	color: #ffffff;
+}
+.margin1{
+	color: #ffff99;
+}
+.margin2{
+	color: #ffdc82;
+}
+.margin3{
+	color: #ffcb78;
+}
+.margin4{
+	color: #ffba6d;
+}
+.margin5{
+	color: #ffa962;
+}
+.margin6{
+	color: #ff9857;
+}
+.margin7{
+	color: #ff874c;
+}
+.margin8{
+	color: #ee7641;
+}
+.margin9{
+	color: #ee6537;
+}
+.margin10{
+	color: #ee542c;
+}
+.margin11{
+	color: #ee4422;
+}
+.black-stroke{
+	text-shadow:
+	black 3px 0px,  black -3px 0px,
+	black 0px -3px, black 0px 3px,
+	black 3px 3px , black -3px 3px,
+	black 3px -3px, black -3px -3px,
+	black 1px 3px,  black -1px 3px,
+	black 1px -3px, black -1px -3px,
+	black 3px 1px,  black -3px 1px,
+	black 3px -1px, black -3px -1px;
+}
+.black-stroke-mid0{
+	text-shadow:
+	black 2.75px 0px,  black -2.75px 0px,
+	black 0px -2.75px, black 0px 2.75px,
+	black 2.75px 2.75px , black -2.75px 2.75px,
+	black 2.75px -2.75px, black -2.75px -2.75px,
+	black 1px 2.75px,  black -1px 2.75px,
+	black 1px -2.75px, black -1px -2.75px,
+	black 2.75px 1px,  black -2.75px 1px,
+	black 2.75px -1px, black -2.75px -1px;
+}
+.black-stroke-mid{
+	text-shadow:
+	black 2.5px 0px,  black -2.5px 0px,
+	black 0px -2.5px, black 0px 2.5px,
+	black 2.5px 2.5px , black -2.5px 2.5px,
+	black 2.5px -2.5px, black -2.5px -2.5px,
+	black 1px 2.5px,  black -1px 2.5px,
+	black 1px -2.5px, black -1px -2.5px,
+	black 2.5px 1px,  black -2.5px 1px,
+	black 2.5px -1px, black -2.5px -1px;
+}
+.black-stroke-small{
+	text-shadow:
+	black 2px 0px,  black -2px 0px,
+	black 0px -2px, black 0px 2px,
+	black 2px 2px , black -2px 2px,
+	black 2px -2px, black -2px -2px,
+	black 1px 2px,  black -1px 2px,
+	black 1px -2px, black -1px -2px,
+	black 2px 1px,  black -2px 1px,
+	black 2px -1px, black -2px -1px;
+}
+.extra-lines{
+	font-size: 40px;
+}
+</style>
+</head>
+<body>
+  <div class="">
+    <span id="timer"></span>
+    <span id="lines" class="extra-lines black-stroke-small"></span>
+  </div>
+  <script language="JavaScript">
+  const g_timerStyle = [
+    "timer normal black-stroke",
+    "timer margin1 black-stroke",
+    "timer margin2 black-stroke",
+    "timer margin3 black-stroke",
+    "timer margin4 black-stroke-mid0",
+    "timer margin5 black-stroke-mid0",
+    "timer margin6 black-stroke-mid",
+    "timer margin7 black-stroke-mid",
+    "timer margin8 black-stroke-small",
+    "timer margin9 black-stroke-small",
+    "timer margin10 black-stroke-small",
+    "timer margin11 black-stroke-small",
+  ];
+  var g_timerid = 0;
+  var g_begin_date;
+  var toDoubleDigits = function(num) {
+    num += "";
+    if (num.length === 1) {
+      num = "0" + num;
+    }
+   return num;
+  };
+  var getMarginLine = function(mi, ss) {
+    if (mi < 10) {
+      return 0;
+    } else if (mi >= 15) {
+      return 11;
+    }
+    return (mi - 10) * 2 + parseInt(ss / 30, 10) + 1;
+  };
+  var setTimerStyle = function(margins) {
+    const element = document.getElementById("timer").parentElement;
+    element.className = g_timerStyle[margins];
+  };
+  var setLinesText = function(margins) {
+    const element = document.getElementById("lines");
+    if (margins == 0) {
+      element.innerText = '';
+    } else {
+      const lineString = margins == 1 ? 'line' : 'lines';
+      element.innerText = '[+' + margins + ' ' + lineString + ']';
+    }
+  };
+  var oneSecTimer = function() {
+    const current_date = new Date();
+    const delta = current_date - g_begin_date;
+    const mi = parseInt(delta / 1000 / 60, 10);
+    const ss = parseInt(delta / 1000 % 60, 10);
+    const margins = getMarginLine(mi, ss);
+    const element = document.getElementById("timer");
+    element.innerText = toDoubleDigits(mi) + ':' + toDoubleDigits(ss);
+    if (ss == 0 || ss == 30) {
+      setTimerStyle(margins);
+      setLinesText(margins);
+    }
+  };
+  var startTimer = function() {
+    clearTimer();
+    document.getElementById("timer").innerText = '00:00';
+    g_begin_date = new Date();
+    g_timerid = setInterval(oneSecTimer, 1000);
+  };
+  var stopTimer = function() {
+    clearInterval(g_timerid);
+    g_timerid = 0;
+  };
+  var clearTimer = function() {
+    stopTimer();
+    document.getElementById("timer").innerText = '';
+    document.getElementById("lines").innerText = '';
+    setTimerStyle(0);
+    setLinesText(0);
+  };
+  var keyevent = function(event) {
+    if (event.key == "Escape") {
+      clearTimer();
+    } else if (event.key == " ") {
+      stopTimer();
+    } else if (g_timerid == 0) {
+      if (event.key == "Enter") {
+        startTimer();
+      } else if (event.key == "3") {
+        // Start after 4 secs.
+        g_timerid = window.setTimeout(startTimer, 4000);
+      } else if (event.key == "2") {
+        // Start after 3 secs.
+        g_timerid = window.setTimeout(startTimer, 3000);
+      } else if (event.key == "1") {
+        // Start after 2 secs.
+        g_timerid = window.setTimeout(startTimer, 2000);
+      }
+    }
+  };
+  document.body.addEventListener('keydown', keyevent)
+  </script>
+</body>
+</html>
