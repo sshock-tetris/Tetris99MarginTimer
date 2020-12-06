@@ -5,7 +5,6 @@
 <title>Margin Timer</title>
 <style>
 *{
-	margin: 0 2px;
 	padding: 0;
 }
 .timer{
@@ -173,6 +172,9 @@
     clearInterval(g_timerid);
     g_timerid = 0;
   };
+  var resumeTimer = function() {
+    g_timerid = setInterval(oneSecTimer, 1000);
+  };
   var clearTimer = function() {
     stopTimer();
     document.getElementById("timer").innerText = '';
@@ -180,11 +182,18 @@
     setTimerStyle(0);
     setLinesText(0);
   };
+  var isTimerStarted = function() {
+    return g_timerid != 0;
+  };
   var keyevent = function(event) {
     if (event.key == "Escape") {
       clearTimer();
     } else if (event.key == " ") {
-      stopTimer();
+      if (isTimerStarted()) {
+        stopTimer();
+      } else {
+        resumeTimer();
+      }
     } else if (g_timerid == 0) {
       if (event.key == "Enter") {
         startTimer();
@@ -200,7 +209,7 @@
       }
     }
   };
-  document.body.addEventListener('keydown', keyevent)
+  document.body.addEventListener('keydown', keyevent);
   </script>
 </body>
 </html>
