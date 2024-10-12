@@ -186,7 +186,7 @@
     return g_timerid != 0;
   };
   var keyevent = function(event) {
-    if (event.key == "Delete") {
+    if (event.key == "Delete" || event.key == "Escape" || event.key == "F12") {
       clearTimer();
     } else if (event.key == " ") {
       if (isTimerStarted()) {
@@ -195,7 +195,7 @@
         resumeTimer();
       }
     } else if (g_timerid == 0) {
-      if (event.key == "Enter") {
+      if (event.key == "Enter" || event.key == "F10") {
         startTimer();
       } else if (event.key == "3") {
         // Start after 4 secs.
