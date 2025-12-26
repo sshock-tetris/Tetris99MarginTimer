@@ -100,7 +100,7 @@
 </style>
 </head>
 <body>
-  <div class="">
+  <div>
     <span id="timer"></span>
     <span id="lines" class="extra-lines black-stroke-small"></span>
   </div>
@@ -120,7 +120,7 @@
     "timer margin11 black-stroke-small",
   ];
   var g_timerid = 0;
-  var g_begin_date;
+  var g_begin_date = 0;
   var toDoubleDigits = function(num) {
     num += "";
     if (num.length === 1) {
@@ -150,8 +150,9 @@
     }
   };
   var oneSecTimer = function() {
-    const current_date = new Date();
+    const current_date = performance.now();
     const delta = current_date - g_begin_date;
+    g_timerid = setTimeout(oneSecTimer, 1000 - delta % 1000);
     const mi = parseInt(delta / 1000 / 60, 10);
     const ss = parseInt(delta / 1000 % 60, 10);
     const margins = getMarginLine(mi, ss);
@@ -165,15 +166,15 @@
   var startTimer = function() {
     clearTimer();
     document.getElementById("timer").innerText = '00:00';
-    g_begin_date = new Date();
-    g_timerid = setInterval(oneSecTimer, 1000);
+    g_begin_date = performance.now();
+    oneSecTimer();
   };
   var stopTimer = function() {
-    clearInterval(g_timerid);
+    clearTimeout(g_timerid);
     g_timerid = 0;
   };
   var resumeTimer = function() {
-    g_timerid = setInterval(oneSecTimer, 1000);
+    oneSecTimer();
   };
   var clearTimer = function() {
     stopTimer();
